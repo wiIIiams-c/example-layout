@@ -16,6 +16,13 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
+    <!-- Alpine.js - Commenting out since Livewire 3 already includes it -->
+    <!-- <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script> -->
+    
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+    
     <!-- Scripts -->
     @livewireStyles
 </head>
@@ -46,5 +53,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     @livewireScripts
+    @stack('scripts')
 </body>
 </html> 

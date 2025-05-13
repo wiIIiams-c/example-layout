@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Dashboard;
 use App\Livewire\Products;
+use App\Livewire\ProductForm;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,3 +31,4 @@ Route::get('/register', function() {
 // Our new Livewire routes
 Route::get('/dashboard', Dashboard::class)->name('dashboard');
 Route::get('/products', Products::class)->name('products');
+Route::get('/products/create', ProductForm::class)->name('product.create');

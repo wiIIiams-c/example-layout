@@ -13,7 +13,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ request()->is('products') ? 'active' : '' }}" href="{{ route('products') }}">
+            <a class="nav-link {{ request()->is('products*') ? 'active' : '' }}" href="{{ route('products') }}">
                 <i class="bi bi-box me-2"></i>
                 Products
             </a>
