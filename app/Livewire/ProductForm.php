@@ -83,9 +83,22 @@ class ProductForm extends Component
     }
     
     #[On('productNotFound')]
-    public function productNotFound()
+    public function productNotFound($data = null)
     {
-        session()->flash('error', 'Product not found. Please try another search.');
+        // Use message from data if available, otherwise use default
+        $errorMsg = isset($data['message']) ? $data['message'] : 'Product not found. Please try another search.';
+        
+        // Flash error message for server-side notification
+        session()->flash('error', $errorMsg);
+        
+        // The notification will be handled by the modal component's event listener
+        // We don't need to dispatch additional events here to avoid duplicates
+    }
+    
+    #[On('showNotification')]
+    public function handleShowNotification($data)
+    {
+        // No need to handle this separately - the modal already dispatches notifyError
     }
     
     public function render()

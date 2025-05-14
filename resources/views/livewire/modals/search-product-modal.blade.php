@@ -48,4 +48,28 @@
     @if($isOpen)
     <div class="modal-backdrop fade show"></div>
     @endif
+    
+    <!-- JavaScript for handling notifications directly from modal -->
+    <script>
+        document.addEventListener('livewire:initialized', function () {
+            // Listen for notifyError event
+            Livewire.on('notifyError', params => {
+                if (typeof Lobibox !== 'undefined') {
+                    console.log('Notification from search modal:', params);
+                    Lobibox.notify('error', {
+                        title: params[0].title || 'Error',
+                        msg: params[0].message || 'An error occurred',
+                        position: 'top right',
+                        sound: false,
+                        delay: 5000,
+                        width: 400, // Ensure width is sufficient for message
+                        messageHeight: 60 // Allow more space for the message
+                    });
+                } else {
+                    console.error('Lobibox not found');
+                    alert(params.title + ': ' + params.message);
+                }
+            });
+        });
+    </script>
 </div> 

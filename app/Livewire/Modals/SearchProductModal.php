@@ -60,7 +60,27 @@ class SearchProductModal extends Component
             // Close the modal
             $this->closeModal();
         } else {
-            $this->dispatch('productNotFound');
+            // Create a clear error message based on search criteria
+            $searchTerm = !empty($this->searchId) 
+                ? "ID: {$this->searchId}" 
+                : "Name: {$this->searchName}";
+                
+            $errorMsg = "No product found matching {$searchTerm}. Please try another search.";
+            
+            // Flash error message to session for server-side notification
+            session()->flash('error', $errorMsg);
+            
+            // Dispatch event to the parent component
+            $this->dispatch('productNotFound', ['message' => $errorMsg]);
+            
+            // Ensure the error notification is shown with clear details
+            $this->dispatch('notifyError', [
+                'title' => 'Product Not Found',
+                'message' => $errorMsg
+            ]);
+            
+            // Close the search modal
+            $this->closeModal();
         }
     }
     

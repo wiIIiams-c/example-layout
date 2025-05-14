@@ -4,6 +4,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         // Check if Lobibox is defined
         if (typeof Lobibox === 'undefined') {
+            console.error('Lobibox notification library not loaded!');
             return;
         }
         
@@ -21,7 +22,8 @@
                     msg: sessionMessage,
                     position: 'top right',
                     sound: false,
-                    delay: 4000
+                    delay: 4000,
+                    width: 400
                 });
             }
             
@@ -31,7 +33,9 @@
                     msg: sessionError,
                     position: 'top right',
                     sound: false,
-                    delay: 4000
+                    delay: 4000,
+                    width: 400,
+                    messageHeight: 60
                 });
             }
             
@@ -41,7 +45,8 @@
                     msg: sessionInfo,
                     position: 'top right',
                     sound: false,
-                    delay: 4000
+                    delay: 4000,
+                    width: 400
                 });
             }
             
@@ -51,7 +56,8 @@
                     msg: sessionWarning,
                     position: 'top right',
                     sound: false,
-                    delay: 4000
+                    delay: 4000,
+                    width: 400
                 });
             }
         }, 300);
@@ -63,7 +69,9 @@
                 msg: '{{ $message }}',
                 position: 'top right',
                 sound: false,
-                delay: 4000
+                delay: 4000,
+                width: 400,
+                messageHeight: '{{ $type }}' === 'error' ? 60 : undefined
             });
         @endif
     });
@@ -71,15 +79,20 @@
     // Make the notification dispatcher available globally
     window.showNotification = function(type, message, title = null) {
         if (typeof Lobibox === 'undefined') {
+            console.error('Lobibox notification library not loaded!');
             return;
         }
+        
+        console.log('Showing notification:', {type, message, title});
         
         Lobibox.notify(type, {
             title: title || (type.charAt(0).toUpperCase() + type.slice(1)),
             msg: message,
             position: 'top right',
             sound: false,
-            delay: 4000
+            delay: 4000,
+            width: 400,
+            messageHeight: type === 'error' ? 60 : undefined
         });
     }
 </script> 
