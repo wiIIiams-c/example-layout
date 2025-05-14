@@ -31,82 +31,36 @@
 
     <div class="card">
         <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col" wire:click="sortBy('id')" style="cursor: pointer;">
-                                ID
-                                @if($sortField === 'id')
-                                    <i class="bi bi-arrow-{{ $sortDirection === 'asc' ? 'up' : 'down' }}"></i>
-                                @endif
-                            </th>
-                            <th scope="col" wire:click="sortBy('name')" style="cursor: pointer;">
-                                Name
-                                @if($sortField === 'name')
-                                    <i class="bi bi-arrow-{{ $sortDirection === 'asc' ? 'up' : 'down' }}"></i>
-                                @endif
-                            </th>
-                            <th scope="col" wire:click="sortBy('category')" style="cursor: pointer;">
-                                Category
-                                @if($sortField === 'category')
-                                    <i class="bi bi-arrow-{{ $sortDirection === 'asc' ? 'up' : 'down' }}"></i>
-                                @endif
-                            </th>
-                            <th scope="col" wire:click="sortBy('price')" style="cursor: pointer;">
-                                Price
-                                @if($sortField === 'price')
-                                    <i class="bi bi-arrow-{{ $sortDirection === 'asc' ? 'up' : 'down' }}"></i>
-                                @endif
-                            </th>
-                            <th scope="col" wire:click="sortBy('stock')" style="cursor: pointer;">
-                                Stock
-                                @if($sortField === 'stock')
-                                    <i class="bi bi-arrow-{{ $sortDirection === 'asc' ? 'up' : 'down' }}"></i>
-                                @endif
-                            </th>
-                            <th scope="col">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if(count($products) > 0)
-                            @foreach($products as $product)
-                                <tr>
-                                    <td>{{ $product['id'] }}</td>
-                                    <td>{{ $product['name'] }}</td>
-                                    <td>{{ $product['category'] }}</td>
-                                    <td>${{ number_format($product['price'], 2) }}</td>
-                                    <td>
-                                        <span class="badge bg-{{ $product['stock'] > 50 ? 'success' : ($product['stock'] > 20 ? 'warning' : 'danger') }}">
-                                            {{ $product['stock'] }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-sm btn-outline-primary">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-outline-danger">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @else
-                            <tr>
-                                <td colspan="6" class="text-center py-4">
-                                    <div class="d-flex flex-column align-items-center">
-                                        <i class="bi bi-search display-5 mb-3"></i>
-                                        <h5>No products found</h5>
-                                        <p class="text-muted">Try changing your search terms</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endif
-                    </tbody>
-                </table>
-            </div>
+            <livewire:product-table 
+                tableId="products-table"
+                :columns="[
+                    ['key' => 'id', 'label' => 'ID', 'searchable' => true],
+                    ['key' => 'name', 'label' => 'Name', 'searchable' => true],
+                    ['key' => 'category', 'label' => 'Category', 'searchable' => true],
+                    ['key' => 'price', 'label' => 'Price', 'searchable' => false, 'format' => 'currency'],
+                    [
+                        'key' => 'stock', 
+                        'label' => 'Stock',
+                        'searchable' => true,
+                        'format' => 'badge',
+                        'badgeColors' => [
+                            50 => 'success',
+                            20 => 'warning',
+                            0 => 'danger'
+                        ]
+                    ]
+                ]"
+                :model="$modelClass"
+                :search="$search"
+                :sortField="$sortField"
+                :sortDirection="$sortDirection"
+                :showActions="true"
+                editAction="edit-product"
+                deleteAction="delete-product"
+                :paginated="true"
+                emptyStateTitle="No products found"
+                emptyStateDescription="Try changing your search terms"
+            />
         </div>
     </div>
 </div>
