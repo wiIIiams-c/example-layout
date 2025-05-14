@@ -47,16 +47,26 @@ class ProductForm extends Component
     {
         $this->validate();
         
-        Product::create([
+        $product = Product::create([
             'name' => $this->name,
             'category' => $this->category,
             'price' => $this->price,
             'stock' => $this->stock,
         ]);
         
-        session()->flash('message', 'Product created successfully!');
+        // Create success message
+        $message = "Product '{$this->name}' was created successfully!";
         
-        return redirect()->route('products');
+        // Set up notification for the next page using sessionStorage
+        session()->flash('notification_script', "
+            <script>
+                window.setRedirectNotification('success', '{$message}', 'Success');
+            </script>
+        ");
+        
+        // Also use standard session flash for systems without JS
+        return redirect()->route('products')
+            ->with('message', $message);
     }
     
     #[On('productSelected')]
@@ -69,7 +79,7 @@ class ProductForm extends Component
         $this->stock = $product['stock'];
         
         // Add a confirmation message
-        session()->flash('message', 'Product loaded successfully!');
+        session()->flash('info', "Product '{$product['name']}' loaded successfully!");
     }
     
     #[On('productNotFound')]

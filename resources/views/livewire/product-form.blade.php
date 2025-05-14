@@ -1,4 +1,7 @@
 <div>
+    <!-- Include notification component -->
+    <x-notification />
+    
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Add New Product</h1>
         <div>
@@ -14,20 +17,6 @@
 
     <div class="card">
         <div class="card-body">
-            @if(session()->has('message'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('message') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            @if(session()->has('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
             <form wire:submit.prevent="save">
                 <div class="mb-3">
                     <label for="name" class="form-label">Product Name</label>
