@@ -1,6 +1,5 @@
 <div>
-    <!-- Include notification component -->
-    <x-notification />
+    <!-- Notification component is already included in the main layout -->
     
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Add New Product</h1>
@@ -29,13 +28,15 @@
 
                 <div class="mb-3">
                     <label for="category" class="form-label">Category</label>
-                    <select class="form-select @error('category') is-invalid @enderror" 
-                            id="category" wire:model="category">
-                        <option value="">Select category</option>
-                        @foreach($categories as $cat)
-                            <option value="{{ $cat }}">{{ $cat }}</option>
-                        @endforeach
-                    </select>
+                    <div wire:ignore>
+                        <select class="form-select select2 @error('category') is-invalid @enderror" 
+                                id="category" wire:model.live="category">
+                            <option value="">Select category</option>
+                            @foreach($categories as $cat)
+                                <option value="{{ $cat }}">{{ $cat }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     @error('category') 
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -69,4 +70,43 @@
 
     <!-- Include the search product modal component -->
     <livewire:modals.search-product-modal />
+    
+    @push('scripts')
+    <script>
+        document.addEventListener('livewire:initialized', function() {
+            // Initialize Select2
+            initSelect2();
+            
+            // Listen to Livewire category updates
+            Livewire.first().on('categoryUpdated', function() {
+                // Use a short timeout to allow the DOM to update
+                setTimeout(function() {
+                    const select = $('#category');
+                    const component = Livewire.first();
+                    if (component && component.category) {
+                        select.val(component.category).trigger('change');
+                    }
+                }, 50);
+            });
+        });
+
+        function initSelect2() {
+            const select = $('#category');
+            
+            if (!select.length) return;
+            
+            // Initialize Select2
+            select.select2({
+                placeholder: "Select category",
+                allowClear: true,
+                width: '100%'
+            }).on('change', function(e) {
+                const component = Livewire.first();
+                if (component) {
+                    component.set('category', select.val());
+                }
+            });
+        }
+    </script>
+    @endpush
 </div> 

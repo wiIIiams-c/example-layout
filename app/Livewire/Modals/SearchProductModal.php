@@ -57,6 +57,13 @@ class SearchProductModal extends Component
                 'stock' => $product->stock
             ]);
             
+            // Use event-based notification (primary approach for Livewire components)
+            $this->dispatch('showNotification', [
+                'type' => 'success',
+                'title' => 'Success',
+                'message' => "Product '{$product->name}' selected successfully."
+            ]);
+            
             // Close the modal
             $this->closeModal();
         } else {
@@ -67,19 +74,17 @@ class SearchProductModal extends Component
                 
             $errorMsg = "No product found matching {$searchTerm}. Please try another search.";
             
-            // Flash error message to session for server-side notification
-            session()->flash('error', $errorMsg);
-            
-            // Dispatch event to the parent component
-            $this->dispatch('productNotFound', ['message' => $errorMsg]);
-            
-            // Ensure the error notification is shown with clear details
-            $this->dispatch('notifyError', [
+            // Use event-based notification (primary approach for Livewire components)
+            $this->dispatch('showNotification', [
+                'type' => 'error',
                 'title' => 'Product Not Found',
                 'message' => $errorMsg
             ]);
             
-            // Close the search modal
+            // Debug log
+            $this->dispatch('debug', ['message' => 'Error message flashed: ' . $errorMsg]);
+            
+            // Close the modal
             $this->closeModal();
         }
     }

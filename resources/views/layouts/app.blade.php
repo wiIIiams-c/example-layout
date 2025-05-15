@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- Lobibox CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/lobibox.min.css') }}">
+    <!-- Select2 CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
     
     <!-- Alpine.js - Commenting out since Livewire 3 already includes it -->
     <!-- <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script> -->
@@ -64,6 +66,9 @@
     
     <!-- jQuery (required for Lobibox) -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <!-- Select2 JS -->
+    <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     
     <!-- Lobibox JS -->
     <script src="{{ asset('assets/js/lobibox.min.js') }}"></script>

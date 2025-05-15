@@ -1,98 +1,79 @@
-@props(['message' => null, 'type' => 'success', 'title' => null])
-
+<!-- Notification component leveraging session flash messages -->
 <script>
+    // Flag to track if notifications have been shown - use window to avoid duplicate declarations
+    window.notificationsShown = window.notificationsShown || false;
+    
+    // Execute once the DOM is fully loaded
     document.addEventListener('DOMContentLoaded', function() {
-        // Check if Lobibox is defined
+        console.log('Notification component loaded');
+        
+        // Check for Lobibox availability
         if (typeof Lobibox === 'undefined') {
             console.error('Lobibox notification library not loaded!');
             return;
         }
         
-        // Direct check for session data without using Blade if statements
-        setTimeout(function() {
-            // This will run after a brief delay to ensure everything is loaded
-            let sessionMessage = "{{ session('message') }}";
-            let sessionError = "{{ session('error') }}";
-            let sessionInfo = "{{ session('info') }}";
-            let sessionWarning = "{{ session('warning') }}";
-            
-            if (sessionMessage && sessionMessage !== "") {
-                Lobibox.notify('success', {
-                    title: 'Success',
-                    msg: sessionMessage,
-                    position: 'top right',
-                    sound: false,
-                    delay: 4000,
-                    width: 400
-                });
-            }
-            
-            if (sessionError && sessionError !== "") {
+        // Only process session messages if no event-based notifications were shown
+        if (!window.notificationsShown) {
+            // Process error messages (if any)
+            var errorMessage = "{{ session('error') }}";
+            if (errorMessage && errorMessage.trim() !== '') {
+                console.log('Displaying session error message:', errorMessage);
                 Lobibox.notify('error', {
-                    title: 'Error',
-                    msg: sessionError,
+                    pauseDelayOnHover: true,
+                    continueDelayOnInactiveTab: false,
                     position: 'top right',
-                    sound: false,
+                    icon: 'bx bx-error',
+                    msg: errorMessage,
                     delay: 4000,
-                    width: 400,
-                    messageHeight: 60
+                    sound: false
                 });
             }
             
-            if (sessionInfo && sessionInfo !== "") {
-                Lobibox.notify('info', {
-                    title: 'Information',
-                    msg: sessionInfo,
+            // Process success messages (if any)
+            var successMessage = "{{ session('success') }}";
+            if (successMessage && successMessage.trim() !== '') {
+                console.log('Displaying session success message:', successMessage);
+                Lobibox.notify('success', {
+                    pauseDelayOnHover: true,
+                    continueDelayOnInactiveTab: false,
                     position: 'top right',
-                    sound: false,
+                    icon: 'bx bx-check-circle',
+                    msg: successMessage,
                     delay: 4000,
-                    width: 400
+                    sound: false
                 });
             }
-            
-            if (sessionWarning && sessionWarning !== "") {
-                Lobibox.notify('warning', {
-                    title: 'Warning',
-                    msg: sessionWarning,
-                    position: 'top right',
-                    sound: false,
-                    delay: 4000,
-                    width: 400
-                });
-            }
-        }, 300);
-        
-        // If there's a message passed directly to the component, show it immediately
-        @if($message)
-            Lobibox.notify('{{ $type }}', {
-                title: '{{ $title ?? 'Notification' }}',
-                msg: '{{ $message }}',
-                position: 'top right',
-                sound: false,
-                delay: 4000,
-                width: 400,
-                messageHeight: '{{ $type }}' === 'error' ? 60 : undefined
-            });
-        @endif
+        }
     });
 
-    // Make the notification dispatcher available globally
-    window.showNotification = function(type, message, title = null) {
-        if (typeof Lobibox === 'undefined') {
-            console.error('Lobibox notification library not loaded!');
-            return;
-        }
+    // Add Livewire event listeners once Livewire is initialized
+    document.addEventListener('livewire:initialized', function() {
+        console.log('Livewire initialized in notification component');
         
-        console.log('Showing notification:', {type, message, title});
-        
-        Lobibox.notify(type, {
-            title: title || (type.charAt(0).toUpperCase() + type.slice(1)),
-            msg: message,
-            position: 'top right',
-            sound: false,
-            delay: 4000,
-            width: 400,
-            messageHeight: type === 'error' ? 60 : undefined
+        // Listen for showNotification event
+        Livewire.on('showNotification', params => {
+            console.log('Show notification event received:', params);
+            
+            if (typeof Lobibox === 'undefined') {
+                console.error('Lobibox notification library not loaded!');
+                return;
+            }
+            
+            // Mark that we've shown a notification via event
+            window.notificationsShown = true;
+            
+            Lobibox.notify(params[0].type || 'info', {
+                pauseDelayOnHover: true,
+                continueDelayOnInactiveTab: false,
+                position: 'top right',
+                icon: params[0].type === 'error' ? 'bx bx-error' : 
+                     params[0].type === 'success' ? 'bx bx-check-circle' : 'bx bx-info-circle',
+                msg: params[0].message,
+                title: params[0].title,
+                delay: 4000,
+                sound: false
+            });
         });
-    }
-</script> 
+    });
+</script>

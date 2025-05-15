@@ -16,7 +16,8 @@ class ProductForm extends Component
     // Define available categories
     public function getCategoriesProperty()
     {
-        return [
+        // Start with the base categories
+        $categories = [
             'Electronics',
             'Clothing',
             'Food',
@@ -25,8 +26,16 @@ class ProductForm extends Component
             'Sports',
             'Toys',
             'Health & Beauty',
-            'Automotive'
+            'Automotive',
+            'Accessories'  // Add the missing category
         ];
+        
+        // If we have a category that's not in the list, add it
+        if (!empty($this->category) && !in_array($this->category, $categories)) {
+            $categories[] = $this->category;
+        }
+        
+        return $categories;
     }
     
     // Validation rules
@@ -80,6 +89,9 @@ class ProductForm extends Component
         
         // Add a confirmation message
         session()->flash('info', "Product '{$product['name']}' loaded successfully!");
+        
+        // Dispatch event for the select2 component to update
+        $this->dispatch('categoryUpdated');
     }
     
     #[On('productNotFound')]
